@@ -1,1 +1,8 @@
-from .llm import chat, ask, count_tokens  # noqa: F401
+from .llm import (  # noqa: F401
+    chat,
+    ask,
+    count_tokens,
+    SMALL_MODEL,
+    BIG_MODEL,
+    TOKENIZER_NOTE,
+)

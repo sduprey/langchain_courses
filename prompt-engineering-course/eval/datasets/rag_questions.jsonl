@@ -1,0 +1,18 @@
+{"input": "What time does the Central Library open on Saturday?", "kind": "answerable", "expected": "10"}
+{"input": "How much is charged for a late book return per day?", "kind": "answerable", "expected": "20"}
+{"input": "When does the third-floor cafe close?", "kind": "answerable", "expected": "5"}
+{"input": "How long can I use a public computer each day?", "kind": "answerable", "expected": "2"}
+{"input": "How far in advance can I book a meeting room?", "kind": "answerable", "expected": "14"}
+{"input": "What do I need to bring to sign up for membership?", "kind": "answerable", "expected": "ID"}
+{"input": "What time is the children's reading hour?", "kind": "answerable", "expected": "11"}
+{"input": "How much does a colour page cost to print?", "kind": "answerable", "expected": "40"}
+{"input": "Is the Central Library open on Sunday?", "kind": "answerable", "expected": "closed"}
+{"input": "What time does the Central Library open on weekdays?", "kind": "distractor", "expected": "9"}
+{"input": "Which library is open to the public only on weekday afternoons?", "kind": "distractor", "expected": "University"}
+{"input": "What is the wifi password?", "kind": "refuse", "expected": "REFUSE"}
+{"input": "Who is the head librarian?", "kind": "refuse", "expected": "REFUSE"}
+{"input": "Does the library sell coffee mugs?", "kind": "refuse", "expected": "REFUSE"}
+{"input": "Is there a parking garage at the Central Library?", "kind": "refuse", "expected": "REFUSE"}
+{"input": "Can I return books to a different branch?", "kind": "refuse", "expected": "REFUSE"}
+{"input": "Does the library lend out laptops?", "kind": "refuse", "expected": "REFUSE"}
+{"input": "What is the fine for a book I lost completely?", "kind": "refuse", "expected": "REFUSE"}

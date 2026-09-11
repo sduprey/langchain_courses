@@ -1,0 +1,40 @@
+{"input": "I was charged twice this month", "expected": "billing"}
+{"input": "The app crashes when I tap export", "expected": "bug"}
+{"input": "Do you offer a student discount?", "expected": "other"}
+{"input": "Payment went through but my plan still says free", "expected": "billing"}
+{"input": "Export runs but the PDF comes out blank", "expected": "bug"}
+{"input": "How do I change my email address?", "expected": "other"}
+{"input": "My invoice shows the wrong VAT rate", "expected": "billing"}
+{"input": "The dark mode toggle does nothing", "expected": "bug"}
+{"input": "Is there an API rate limit?", "expected": "other"}
+{"input": "You charged me again after I cancelled", "expected": "billing"}
+{"input": "Search returns results from projects I deleted", "expected": "bug"}
+{"input": "Can I export my data to CSV?", "expected": "other"}
+{"input": "The report total does not match the sum of the line items", "expected": "bug"}
+{"input": "I need a copy of my receipt for June", "expected": "billing"}
+{"input": "Which browsers do you support?", "expected": "other"}
+{"input": "Uploading a file over 10 MB fails silently", "expected": "bug"}
+{"input": "My card expired and now I cannot log in to pay", "expected": "billing"}
+{"input": "Where can I find the keyboard shortcuts?", "expected": "other"}
+{"input": "The mobile app shows a white screen after the splash", "expected": "bug"}
+{"input": "Please cancel my subscription and stop billing me", "expected": "billing"}
+{"input": "How do I invite a teammate to my workspace?", "expected": "other"}
+{"input": "Notifications arrive hours late, if at all", "expected": "bug"}
+{"input": "I was promised a refund last week and still have not received it", "expected": "billing"}
+{"input": "Does the free plan include version history?", "expected": "other"}
+{"input": "Clicking Save sometimes duplicates the record", "expected": "bug"}
+{"input": "Your system billed me in USD but my account is set to EUR", "expected": "billing"}
+{"input": "Can I use this offline?", "expected": "other"}
+{"input": "The chart legend overlaps the data on small screens", "expected": "bug"}
+{"input": "I need an invoice addressed to my company, not to me", "expected": "billing"}
+{"input": "What is your data retention policy?", "expected": "other"}
+{"input": "After the latest release my saved filters are all gone", "expected": "bug"}
+{"input": "Why is there a 15 dollar charge I do not recognise?", "expected": "billing"}
+{"input": "How do I turn on two-factor authentication?", "expected": "other"}
+{"input": "The search box stops responding after a few queries", "expected": "bug"}
+{"input": "I upgraded but I am still on the old plan limits", "expected": "billing"}
+{"input": "Do you have a Slack integration?", "expected": "other"}
+{"input": "Timestamps display in the wrong time zone", "expected": "bug"}
+{"input": "Can I get a discount for a non-profit?", "expected": "other"}
+{"input": "The invoice PDF download returns a 404", "expected": "bug"}
+{"input": "Remove my saved credit card from the account", "expected": "billing"}

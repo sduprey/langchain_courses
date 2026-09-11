@@ -1,0 +1,18 @@
+{"context": "France's capital is Paris.", "answer": "Paris is the capital of France.", "human": "pass"}
+{"context": "France's capital is Paris.", "answer": "The capital of France is Lyon.", "human": "fail"}
+{"context": "The bridge was completed in 1932.", "answer": "The bridge was finished in 1932.", "human": "pass"}
+{"context": "The bridge was completed in 1932.", "answer": "The bridge opened in the early 1930s.", "human": "pass"}
+{"context": "The bridge was completed in 1932.", "answer": "The bridge was completed in 1923.", "human": "fail"}
+{"context": "The report is due Friday.", "answer": "I am not sure when the report is due.", "human": "fail"}
+{"context": "The medicine should be taken twice daily with food.", "answer": "Take the medicine twice a day with meals.", "human": "pass"}
+{"context": "The medicine should be taken twice daily with food.", "answer": "Take the medicine twice a day.", "human": "fail"}
+{"context": "Sales grew 8% in Q2 and fell 3% in Q3.", "answer": "Sales rose in Q2 and declined in Q3.", "human": "pass"}
+{"context": "Sales grew 8% in Q2 and fell 3% in Q3.", "answer": "Sales grew steadily through Q2 and Q3.", "human": "fail"}
+{"context": "The museum is free on Sundays.", "answer": "The museum offers free entry on Sundays, which is a wonderful way to spend a weekend.", "human": "pass"}
+{"context": "The team has 5 engineers and 2 designers.", "answer": "The team has 7 people.", "human": "pass"}
+{"context": "The team has 5 engineers and 2 designers.", "answer": "The team is mostly designers.", "human": "fail"}
+{"context": "Water boils at 100 C at sea level.", "answer": "At sea level, water boils at 100 degrees Celsius.", "human": "pass"}
+{"context": "The flight departs at 14:05 from gate B12.", "answer": "The flight leaves at 2:05 pm from gate B12.", "human": "pass"}
+{"context": "The flight departs at 14:05 from gate B12.", "answer": "The flight departs at 14:05 from gate B2.", "human": "fail"}
+{"context": "The policy covers damage but not theft.", "answer": "The policy covers damage.", "human": "pass"}
+{"context": "The policy covers damage but not theft.", "answer": "The policy covers theft and damage.", "human": "fail"}

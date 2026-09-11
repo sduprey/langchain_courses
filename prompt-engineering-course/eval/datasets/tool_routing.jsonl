@@ -1,0 +1,14 @@
+{"input": "What's the weather in Paris right now?", "expected": "weather"}
+{"input": "Will it rain in Tokyo tomorrow?", "expected": "weather"}
+{"input": "How cold is it in Oslo today?", "expected": "weather"}
+{"input": "Do I need an umbrella in London this afternoon?", "expected": "weather"}
+{"input": "Give me the forecast for Berlin this weekend", "expected": "weather"}
+{"input": "How many euros is 100 US dollars?", "expected": "currency"}
+{"input": "Convert 50 British pounds to Japanese yen", "expected": "currency"}
+{"input": "What is 200 dollars in Canadian dollars?", "expected": "currency"}
+{"input": "What's the exchange rate from euro to Swiss franc?", "expected": "currency"}
+{"input": "Who painted the Mona Lisa?", "expected": "none"}
+{"input": "Translate 'good morning' into Spanish", "expected": "none"}
+{"input": "What is the capital of Australia?", "expected": "none"}
+{"input": "Summarise the plot of Hamlet in one line", "expected": "none"}
+{"input": "What is 15% of 240?", "expected": "none"}

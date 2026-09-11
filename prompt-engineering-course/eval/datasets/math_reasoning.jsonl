@@ -1,0 +1,20 @@
+{"input": "A shirt costs $40 after a 20% discount. What was the original price in dollars?", "expected": "50"}
+{"input": "If 3 pens cost $2.10, what do 10 pens cost in dollars?", "expected": "7"}
+{"input": "Tom is twice as old as Sara. In 5 years their ages sum to 40. How old is Tom now?", "expected": "20"}
+{"input": "A bookstore had 240 books. It sold 35% on Monday and a quarter of the remainder on Tuesday. How many books are left?", "expected": "117"}
+{"input": "A tank holds 500 litres. It leaks 12 litres per hour for 6 hours, then 200 litres are added. How many litres are in the tank?", "expected": "628"}
+{"input": "A rectangle is 14 cm by 9 cm. The length increases by 4 cm and the width decreases by 3 cm. What is the new area in square cm?", "expected": "108"}
+{"input": "A train travels 60 km in the first hour and 90 km in the second hour. What is its average speed in km/h?", "expected": "75"}
+{"input": "You buy 3 notebooks at $4 each and 2 pens at $1.50 each and pay with a $20 bill. How much change do you get in dollars?", "expected": "5"}
+{"input": "A recipe for 4 people needs 600 g of flour. How many grams are needed for 10 people?", "expected": "1500"}
+{"input": "A car uses 6 litres of fuel per 100 km. How many litres does a 250 km trip use?", "expected": "15"}
+{"input": "A worker earns $18 per hour and works 7 hours a day for 5 days. What is the total pay in dollars?", "expected": "630"}
+{"input": "A crowd has 320 people. 60% are adults and the rest are children. How many children are there?", "expected": "128"}
+{"input": "A phone was $800. Its price rose 10%, then fell 10%. What is the final price in dollars?", "expected": "792"}
+{"input": "Three friends split a $135 bill equally and each adds a $5 tip. How much does each friend pay in dollars?", "expected": "50"}
+{"input": "A box holds 24 cans. A store receives 15 boxes and sells 210 cans. How many cans are left?", "expected": "150"}
+{"input": "A rope is 12 m long. You cut off a third, then cut the remaining piece in half. How long is each final piece in metres?", "expected": "4"}
+{"input": "A student scores 72, 85, and 80 on three tests. What score is needed on a fourth test for an average of 80?", "expected": "83"}
+{"input": "A garden is 20 m by 15 m. A 1 m wide path runs around the inside edge. What is the area of the path in square metres?", "expected": "66"}
+{"input": "Water costs $2 for the first 10 litres and $0.50 per litre after that. What does 18 litres cost in dollars?", "expected": "6"}
+{"input": "A bus leaves at 9:40 and arrives at 12:25. How many minutes is the trip?", "expected": "165"}
