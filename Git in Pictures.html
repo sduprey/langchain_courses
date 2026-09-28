@@ -1,0 +1,689 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Git in Pictures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#EEF1F5; --card:#FFFFFF; --ink:#141A26; --muted:#5E6878; --line:#C9D1DD; --chip:#E1E6EE;
+  --code-bg:#161C28; --code-ink:#DCE3EE; --code-mute:#7D889B;
+  --main:#2F5FD0; --dev:#11905F; --feat:#DA6D12; --rel:#8350E6; --hot:#D2344E; --remote:#0A86A2;
+  --head:#141A26; --on:#FFFFFF; --dot:rgba(20,26,38,.07);
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E121A; --card:#161C27; --ink:#E7EBF2; --muted:#98A2B4; --line:#2B3446; --chip:#232B3A;
+    --code-bg:#0A0D13; --code-ink:#DCE3EE; --code-mute:#6F7A8E;
+    --main:#7299FF; --dev:#3CCB8F; --feat:#FF9B47; --rel:#B08DFF; --hot:#FF6A7F; --remote:#38C6E2;
+    --head:#E7EBF2; --on:#0E121A; --dot:rgba(231,235,242,.05);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E121A; --card:#161C27; --ink:#E7EBF2; --muted:#98A2B4; --line:#2B3446; --chip:#232B3A;
+  --code-bg:#0A0D13; --code-ink:#DCE3EE; --code-mute:#6F7A8E;
+  --main:#7299FF; --dev:#3CCB8F; --feat:#FF9B47; --rel:#B08DFF; --hot:#FF6A7F; --remote:#38C6E2;
+  --head:#E7EBF2; --on:#0E121A; --dot:rgba(231,235,242,.05);
+}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0}
+.stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%) scale(var(--k,.5));transform-origin:center center;
+  background-color:var(--bg);background-image:radial-gradient(var(--dot) 1.2px,transparent 1.3px);background-size:24px 24px;
+  border-radius:14px;box-shadow:0 0 0 1px var(--line);overflow:hidden;cursor:pointer}
+.slide{position:absolute;inset:0;padding:52px 64px 44px;display:none;flex-direction:column;gap:6px}
+.slide.active{display:flex}
+.eyebrow{font-family:var(--mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.02em}
+h2{font-size:46px;font-weight:700;line-height:1.05;margin-bottom:18px}
+p{margin:0}
+.split{flex:1;min-height:0;display:grid;grid-template-columns:370px 1fr;gap:36px;align-items:center}
+.col{display:flex;flex-direction:column;gap:16px;font-size:19px;line-height:1.45}
+.col strong{font-weight:700}
+svg.g{width:100%;height:100%;display:block;overflow:visible}
+.fig{min-height:0;height:100%;display:flex;align-items:center}
+code{font-family:var(--mono);font-size:.86em;background:var(--chip);padding:.08em .38em;border-radius:5px}
+.cmd{font-family:var(--mono);font-size:16px;background:var(--code-bg);color:var(--code-ink);padding:14px 18px;border-radius:10px;margin:0;line-height:1.6;white-space:pre}
+.cmd .pr{color:var(--code-mute);user-select:none}
+.cmd .c{color:var(--code-mute)}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:10px}
+.legend i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.bul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
+.bul li{padding-left:22px;position:relative}
+.bul li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--ink)}
+
+/* build steps */
+.s{opacity:0;transition:opacity .45s ease}
+.s.on{opacity:1}
+.u{transition:opacity .45s ease}
+.u.off{opacity:0}
+.mv{transition:transform .7s cubic-bezier(.3,.7,.2,1)}
+@media (prefers-reduced-motion: reduce){.s,.u,.mv{transition:none}}
+
+/* svg text */
+.ct{font-family:var(--mono);font-weight:700}
+.hash{font-family:var(--mono);font-size:13px;fill:var(--muted)}
+.pt{font-family:var(--mono);font-size:13px;font-weight:700;fill:var(--on)}
+.an{font-family:var(--body);font-size:16px;fill:var(--ink)}
+.an.m{fill:var(--muted)}
+.an.b{font-weight:700}
+.an.big{font-size:20px;font-weight:600}
+.cd{font-family:var(--mono);font-size:15px;fill:var(--ink);font-weight:600}
+.lane{font-family:var(--mono);font-size:15px;font-weight:700}
+.halo{paint-order:stroke;stroke:var(--bg);stroke-width:7px;stroke-linejoin:round}
+.bt{font-family:var(--display);font-size:22px;font-weight:700;fill:var(--ink)}
+.bs{font-family:var(--body);font-size:15px;fill:var(--muted)}
+
+/* title */
+.t-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;padding-bottom:210px}
+h1{font-size:104px;font-weight:800;line-height:.95}
+h1 em{font-style:normal;color:var(--main)}
+.sub{font-size:27px;color:var(--muted);max-width:30ch;line-height:1.3}
+.sub b{color:var(--ink);font-weight:600}
+.hint{font-family:var(--mono);font-size:14px;color:var(--muted);margin-top:8px}
+.t-graph{position:absolute;left:0;right:0;bottom:26px;height:300px}
+
+/* pull equation */
+.eqs{display:flex;flex-direction:column;gap:26px;margin-top:6px}
+.eq{display:flex;flex-direction:column;gap:8px}
+.eq .row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:25px;font-weight:700;padding:12px 20px;border-radius:12px;border:2.5px solid var(--c);color:var(--c);background:var(--card)}
+.chip.solid{background:var(--c);color:var(--on)}
+.op{font-family:var(--display);font-size:40px;font-weight:700;color:var(--muted)}
+.eq .cap{font-size:18px;color:var(--muted);padding-left:4px}
+.tip{margin-top:auto;display:flex;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;font-size:18px;line-height:1.45}
+.tip .tag{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--on);background:var(--dev);padding:6px 10px;border-radius:6px;white-space:nowrap}
+
+/* merge vs rebase */
+.two{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:34px;min-height:0}
+.panel{display:flex;flex-direction:column;gap:10px;min-height:0}
+.panel h3{font-family:var(--mono);font-size:22px;margin:0;font-weight:700}
+.panel .g{height:250px}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:16px;line-height:1.4}
+.pc b{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.pc .pro b{color:var(--dev)} .pc .con b{color:var(--hot)}
+.warn{font-size:18px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 18px}
+.warn b{color:var(--hot)}
+
+/* conflict */
+.conf{font-family:var(--mono);font-size:18px;background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:18px 0;line-height:1.75;margin:0}
+.conf span{display:block;padding:0 22px;white-space:pre}
+.conf .mk{color:#FFD27A;font-weight:700}
+.conf .ours{background:rgba(114,153,255,.18)}
+.conf .theirs{background:rgba(56,198,226,.18)}
+.conf .note{float:right;color:var(--code-mute);font-weight:400;font-size:14px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:n}
+.steps li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;font-size:18px;line-height:1.4}
+.steps li::before{counter-increment:n;content:counter(n);width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--mono);font-weight:700;display:grid;place-items:center;font-size:16px}
+.escape{font-size:17px;border:2px dashed var(--line);border-radius:12px;padding:12px 16px;color:var(--muted)}
+.escape b{color:var(--ink)}
+
+/* strategy slides */
+.under{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.pill{font-size:16px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 16px}
+.pill b{font-weight:700}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:17px;line-height:1.35}
+.tbl th,.tbl td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.tbl thead th{font-family:var(--display);font-size:24px;border-bottom:2px solid var(--ink);vertical-align:bottom}
+.tbl thead th svg{display:block;width:210px;height:62px;margin-bottom:6px}
+.tbl tbody th{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;width:190px}
+
+/* routine */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1;align-content:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.card .n{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.08em}
+.card h4{margin:0;font-family:var(--display);font-size:24px;font-weight:700}
+.card .cmd{font-size:14px;padding:10px 12px;white-space:pre-wrap}
+.card p{font-size:16px;color:var(--muted);line-height:1.4}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 36px;flex:1;align-content:center}
+.rule{display:flex;flex-direction:column;gap:8px;border-top:3px solid var(--c);padding-top:14px}
+.rule h4{margin:0;font-family:var(--display);font-size:28px;font-weight:700;line-height:1.1}
+.rule p{font-size:18px;color:var(--muted);line-height:1.45}
+
+/* controls */
+.bar{position:fixed;left:0;right:0;bottom:0;height:52px;padding:0 16px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:14px;color:var(--muted);font-family:var(--mono);font-size:13px}
+.bar button{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;width:40px;height:34px;cursor:pointer}
+.bar button:disabled{opacity:.35;cursor:default}
+.bar button:focus-visible{outline:2px solid var(--main);outline-offset:2px}
+.prog{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden;min-width:40px}
+.prog i{display:block;height:100%;background:var(--main);width:0;transition:width .3s}
+.pips{display:flex;gap:5px}
+.pips i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.pips i.on{background:var(--ink)}
+.sec{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:32vw}
+.rot{display:none}
+@media (max-width:600px) and (orientation:portrait){.rot{display:inline}.sec{display:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs id="markers"></defs>
+</svg>
+
+<div class="deck" id="deck">
+<div class="stage" id="stage">
+
+<!-- 1 -->
+<section class="slide" data-sec="Git in Pictures">
+  <div class="t-wrap">
+    <div class="eyebrow">A visual guide</div>
+    <h1>Git in <em>Pictures</em></h1>
+    <p class="sub"><b>fetch, merge, pull</b>, and the branching strategies teams actually use</p>
+    <p class="hint">→ or click to advance · ← to go back</p>
+  </div>
+  <div class="t-graph"><svg class="g" data-d="title" viewBox="0 0 1280 300" preserveAspectRatio="xMidYMid meet"></svg></div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-sec="Foundations">
+  <div class="eyebrow">Foundations</div>
+  <h2>Your code lives in four places</h2>
+  <div class="fig" style="flex:1"><svg class="g" data-d="places" viewBox="0 0 1200 490"></svg></div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-sec="Foundations">
+  <div class="eyebrow">Foundations</div>
+  <h2>History is a graph. Branches are labels.</h2>
+  <div class="split">
+    <div class="col">
+      <ul class="bul">
+        <li>A <strong>commit</strong> is a full snapshot of your project, plus a pointer to its parent and a unique hash.</li>
+        <li>A <strong>branch</strong> is a movable label that points at one commit. Creating one costs almost nothing.</li>
+        <li><strong>HEAD</strong> marks the branch you are on. Each new commit moves that label forward.</li>
+      </ul>
+    </div>
+    <div class="fig"><svg class="g" data-d="graph" viewBox="0 0 800 440"></svg></div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-sec="Foundations">
+  <div class="eyebrow">Foundations</div>
+  <h2>main vs origin/main</h2>
+  <div class="split">
+    <div class="col">
+      <p><code>main</code> is your branch. You move it.</p>
+      <p><code>origin/main</code> is a read-only bookmark: where <code>main</code> was on the server <strong>the last time you talked to it</strong>.</p>
+      <p>Teammates keep pushing. Your laptop does not know until you ask.</p>
+      <div class="legend">
+        <span><i style="background:var(--main)"></i>shared history</span>
+        <span><i style="background:var(--remote)"></i>teammates’ new commits</span>
+        <span><i style="background:var(--feat)"></i>your new commit</span>
+      </div>
+    </div>
+    <div class="fig"><svg class="g" data-d="lvr" viewBox="0 0 800 440"></svg></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-sec="git fetch">
+  <div class="eyebrow">git fetch</div>
+  <h2>fetch downloads. It never touches your work.</h2>
+  <div class="split">
+    <div class="col">
+      <pre class="cmd"><span class="pr">$ </span>git fetch origin</pre>
+      <ul class="bul">
+        <li>Copies new commits from the server into your repository.</li>
+        <li>Moves the <code>origin/*</code> bookmarks to match the server.</li>
+        <li>Leaves <code>main</code>, your files and your staging area exactly as they were.</li>
+      </ul>
+      <p style="color:var(--muted)">Safe to run any time. Then look before you leap: <code>git log main..origin/main</code></p>
+    </div>
+    <div class="fig"><svg class="g" data-d="fetch" viewBox="0 0 800 460"></svg></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-sec="git merge">
+  <div class="eyebrow">git merge · case 1</div>
+  <h2>Fast-forward: the label just slides</h2>
+  <div class="split">
+    <div class="col">
+      <pre class="cmd"><span class="pr">$ </span>git merge origin/main</pre>
+      <p>If you have <strong>no new commits</strong> of your own, there is nothing to combine.</p>
+      <p>Git moves <code>main</code> forward to the same commit as <code>origin/main</code>. No merge commit, a perfectly straight history.</p>
+    </div>
+    <div class="fig"><svg class="g" data-d="ff" viewBox="0 0 800 400"></svg></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-sec="git merge">
+  <div class="eyebrow">git merge · case 2</div>
+  <h2>Diverged: a merge commit ties them together</h2>
+  <div class="split">
+    <div class="col">
+      <pre class="cmd"><span class="pr">$ </span>git merge origin/main</pre>
+      <p>You committed X and Y. Teammates pushed D and E. Both lines grew from C.</p>
+      <p>Git compares the two tips against their common ancestor C (a <strong>three-way merge</strong>) and records the result as a new commit <strong>M</strong>.</p>
+      <p style="color:var(--muted)">If both sides edited the same lines, Git stops and asks you: that is a conflict.</p>
+    </div>
+    <div class="fig"><svg class="g" data-d="merge3" viewBox="0 0 800 440"></svg></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-sec="git pull">
+  <div class="eyebrow">git pull</div>
+  <h2>pull is two commands in one</h2>
+  <div class="eqs">
+    <div class="eq">
+      <div class="row"><span class="chip solid" style="--c:var(--main)">git pull</span><span class="op">=</span><span class="chip" style="--c:var(--remote)">git fetch</span><span class="op">+</span><span class="chip" style="--c:var(--dev)">git merge origin/main</span></div>
+      <div class="cap">Downloads, then combines. Creates a merge commit if the histories diverged.</div>
+    </div>
+    <div class="eq s" data-step="1">
+      <div class="row"><span class="chip solid" style="--c:var(--main)">git pull --rebase</span><span class="op">=</span><span class="chip" style="--c:var(--remote)">git fetch</span><span class="op">+</span><span class="chip" style="--c:var(--rel)">git rebase origin/main</span></div>
+      <div class="cap">Downloads, then replays your local commits on top. Straight history, no merge commit.</div>
+    </div>
+    <div class="eq s" data-step="2">
+      <div class="row"><span class="chip solid" style="--c:var(--main)">git pull --ff-only</span><span class="op">=</span><span class="chip" style="--c:var(--remote)">git fetch</span><span class="op">+</span><span class="chip" style="--c:var(--muted)">fast-forward, or stop</span></div>
+      <div class="cap">Only updates if main can slide forward. If histories diverged, it stops and you choose.</div>
+    </div>
+  </div>
+  <div class="tip s" data-step="3"><span class="tag">Good default</span><span>Run <code>git config --global pull.ff only</code> once. Pull then never creates surprise merge commits, and you decide between merge and rebase when it matters.</span></div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-sec="Merge vs rebase">
+  <div class="eyebrow">Two ways to combine</div>
+  <h2>Merge keeps what happened. Rebase rewrites it straight.</h2>
+  <div class="two">
+    <div class="panel">
+      <h3 style="color:var(--dev)">git merge origin/main</h3>
+      <svg class="g" data-d="mvr1" viewBox="0 0 560 250"></svg>
+      <div class="pc"><div class="pro"><b>Pros</b>True history. Never rewrites commits. Safe on shared branches.</div><div class="con"><b>Cons</b>Extra merge commits. The graph gets busy on active branches.</div></div>
+    </div>
+    <div class="panel">
+      <h3 style="color:var(--rel)">git rebase origin/main</h3>
+      <svg class="g" data-d="mvr2" viewBox="0 0 560 250"></svg>
+      <div class="pc"><div class="pro"><b>Pros</b>Linear, readable history. Easy to bisect and review.</div><div class="con"><b>Cons</b>X and Y become new commits X′ and Y′ with new hashes.</div></div>
+    </div>
+  </div>
+  <div class="warn"><b>The rule:</b> rebase only commits nobody else has. Never rebase a branch that others have already pulled.</div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-sec="Conflicts">
+  <div class="eyebrow">When merge needs you</div>
+  <h2>Reading and resolving a conflict</h2>
+  <div class="split" style="grid-template-columns:560px 1fr">
+    <div class="col">
+<pre class="conf"><span>function connect() {</span><span class="mk">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<span class="note">your side</span></span><span class="ours">  const timeout = 30;</span><span class="mk">=======</span><span class="theirs">  const timeout = 60;</span><span class="mk">&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main<span class="note">their side</span></span><span>}</span></pre>
+      <p style="color:var(--muted);font-size:17px">Git writes both versions into the file between markers. You decide what the final code is: yours, theirs, or a mix.</p>
+    </div>
+    <div class="col">
+      <ol class="steps">
+        <li><span><code>git status</code> lists every file marked <em>both modified</em>.</span></li>
+        <li><span>Edit each file: keep the right code and delete all three marker lines.</span></li>
+        <li><span><code>git add &lt;file&gt;</code> marks it resolved.</span></li>
+        <li><span><code>git commit</code> to finish the merge, or <code>git rebase --continue</code> during a rebase.</span></li>
+      </ol>
+      <div class="escape"><b>Changed your mind?</b> <code>git merge --abort</code> or <code>git rebase --abort</code> puts everything back as it was.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-sec="Branching">
+  <div class="eyebrow">Branching</div>
+  <h2>The life of a feature branch</h2>
+  <div class="fig" style="flex:1"><svg class="g" data-d="life" viewBox="0 0 1200 400"></svg></div>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-sec="Strategies">
+  <div class="eyebrow">Strategy 1 · GitHub Flow</div>
+  <h2>One main branch, always deployable</h2>
+  <div class="fig" style="flex:1"><svg class="g" data-d="ghflow" viewBox="0 0 1200 350"></svg></div>
+  <div class="under">
+    <span class="pill"><b>main</b> is always releasable</span>
+    <span class="pill">one short branch per change</span>
+    <span class="pill">Pull Request + review + CI</span>
+    <span class="pill">merge, then deploy</span>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-sec="Strategies">
+  <div class="eyebrow">Strategy 2 · Git Flow</div>
+  <h2>Two long-lived branches, plus helpers</h2>
+  <div class="fig" style="flex:1"><svg class="g" data-d="gitflow" viewBox="0 0 1200 490"></svg></div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-sec="Strategies">
+  <div class="eyebrow">Strategy 3 · Trunk-based development</div>
+  <h2>Everyone integrates into main, every day</h2>
+  <div class="fig" style="flex:1"><svg class="g" data-d="trunk" viewBox="0 0 1200 320"></svg></div>
+  <div class="under">
+    <span class="pill">branches live <b>hours</b>, not weeks</span>
+    <span class="pill">CI runs on every commit</span>
+    <span class="pill">unfinished work hides behind <b>feature flags</b></span>
+    <span class="pill">release straight from main</span>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-sec="Strategies">
+  <div class="eyebrow">Choosing</div>
+  <h2>Which strategy fits your team?</h2>
+  <div style="overflow-x:auto">
+  <table class="tbl">
+    <thead><tr><th></th>
+      <th><svg data-d="mini1" viewBox="0 0 210 62"></svg>GitHub Flow</th>
+      <th><svg data-d="mini2" viewBox="0 0 210 62"></svg>Git Flow</th>
+      <th><svg data-d="mini3" viewBox="0 0 210 62"></svg>Trunk-based</th></tr></thead>
+    <tbody>
+      <tr><th>Long-lived branches</th><td>main</td><td>main + develop</td><td>main only</td></tr>
+      <tr><th>Branch lifetime</th><td>days</td><td>days to weeks</td><td>hours</td></tr>
+      <tr><th>Releases</th><td>continuous deploy from main</td><td>versioned, scheduled (v1.1, v1.2)</td><td>continuous; flags control who sees what</td></tr>
+      <tr><th>Needs</th><td>good CI and code review</td><td>release discipline</td><td>strong tests, fast CI, feature flags</td></tr>
+      <tr><th>Best for</th><td>web apps, small to mid teams</td><td>mobile apps, libraries, on-prem software with several versions in support</td><td>high-velocity teams, monorepos</td></tr>
+      <tr><th>Merge pain</th><td>low</td><td>higher: long branches drift apart</td><td>lowest: changes stay small</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-sec="Practice">
+  <div class="eyebrow">Practice</div>
+  <h2>A daily routine that avoids trouble</h2>
+  <div class="grid3">
+    <div class="card"><span class="n">1 · START</span><h4>Sync main</h4><pre class="cmd">git switch main
+git pull --ff-only</pre></div>
+    <div class="card"><span class="n">2 · BRANCH</span><h4>One branch per change</h4><pre class="cmd">git switch -c feature/login</pre></div>
+    <div class="card"><span class="n">3 · WORK</span><h4>Small commits</h4><pre class="cmd">git add -p
+git commit -m "Add login form"</pre></div>
+    <div class="card"><span class="n">4 · STAY CURRENT</span><h4>Catch up with main</h4><pre class="cmd">git fetch
+git rebase origin/main</pre><p>or <code>git merge origin/main</code> if the branch is shared</p></div>
+    <div class="card"><span class="n">5 · SHARE</span><h4>Push and open a PR</h4><pre class="cmd">git push -u origin feature/login</pre></div>
+    <div class="card"><span class="n">6 · CLEAN UP</span><h4>After the merge</h4><pre class="cmd">git switch main && git pull
+git branch -d feature/login</pre></div>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-sec="Practice">
+  <div class="eyebrow">Take-aways</div>
+  <h2>Six rules worth keeping</h2>
+  <div class="rules">
+    <div class="rule" style="--c:var(--remote)"><h4>Fetch often</h4><p>It never changes your work, so run it whenever you want to see what’s new.</p></div>
+    <div class="rule" style="--c:var(--main)"><h4>Commit before you pull</h4><p>A clean working directory keeps every merge and rebase reversible.</p></div>
+    <div class="rule" style="--c:var(--dev)"><h4>Pull with --ff-only</h4><p>No surprise merge commits. You choose merge or rebase on purpose.</p></div>
+    <div class="rule" style="--c:var(--hot)"><h4>Never rebase shared commits</h4><p>Rewriting pushed history breaks everyone who built on it.</p></div>
+    <div class="rule" style="--c:var(--feat)"><h4>Keep branches short</h4><p>The longer a branch lives, the bigger and riskier its merge.</p></div>
+    <div class="rule" style="--c:var(--rel)"><h4>Protect main</h4><p>Require a Pull Request, a review and green CI before anything lands.</p></div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<div class="bar">
+  <button id="prev" aria-label="Previous">←</button>
+  <button id="next" aria-label="Next">→</button>
+  <span id="count">1 / 17</span>
+  <span class="pips" id="pips"></span>
+  <div class="prog"><i id="prog"></i></div>
+  <span class="sec" id="sec"></span>
+  <span class="rot">turn sideways for bigger slides</span>
+</div>
+
+<script>
+(function(){
+const KEYS=['main','dev','feat','rel','hot','remote','muted','ink','head'];
+const V=k=>`var(--${k})`;
+document.getElementById('markers').innerHTML=KEYS.map(k=>`<marker id="ah-${k}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:${V(k)}"/></marker>`).join('');
+
+function att(o){const c=[];let s='';
+  if(o.step){c.push('s');s+=` data-step="${o.step}"`}
+  if(o.until){c.push('u');s+=` data-until="${o.until}"`}
+  if(o.move){c.push('mv');s+=` data-mstep="${o.move[0]}" data-dx="${o.move[1]}" data-dy="${o.move[2]||0}"`}
+  if(o.cls)c.push(o.cls);
+  return `class="${c.join(' ')}"${s}`;}
+// commit
+function C(x,y,k,o={}){const r=o.r||17,t=o.t||'',gh=o.ghost;let g=`<g ${att(o)}>`;
+  if(o.merge)g+=`<circle cx="${x}" cy="${y}" r="${r+6}" style="fill:var(--bg);stroke:${V(k)};stroke-width:3"/>`;
+  g+=`<circle cx="${x}" cy="${y}" r="${r}" style="fill:${gh?'var(--bg)':V(k)};stroke:${V(k)};stroke-width:3${gh?';stroke-dasharray:4 4':''}"/>`;
+  if(t)g+=`<text x="${x}" y="${y+1}" class="ct" text-anchor="middle" dominant-baseline="central" style="fill:${gh?V(k):'var(--on)'};font-size:${o.fs||(t.length>1?13:15)}px">${t}</text>`;
+  if(o.label)g+=`<text x="${x}" y="${y+r+(o.merge?28:22)}" class="hash" text-anchor="middle">${o.label}</text>`;
+  return g+'</g>';}
+// edge
+function E(x1,y1,x2,y2,k,o={}){const m=(x1+x2)/2;const d=y1===y2?`M${x1} ${y1}L${x2} ${y2}`:`M${x1} ${y1}C${m} ${y1} ${m} ${y2} ${x2} ${y2}`;
+  return `<path ${att(o)} d="${d}" style="fill:none;stroke:${V(k)};stroke-width:${o.w||5};stroke-linecap:round${o.dash?';stroke-dasharray:'+o.dash:''}${o.op?';opacity:'+o.op:''}"/>`;}
+// arrow path
+function A(d,k,o={}){return `<path ${att(o)} d="${d}" style="fill:none;stroke:${V(k)};stroke-width:${o.w||3};stroke-linecap:round${o.dash?';stroke-dasharray:'+o.dash:''}" marker-end="url(#ah-${k})"/>`;}
+// pointer pill
+function P(x,y,text,k,o={}){const w=text.length*8.2+24,h=26,lift=o.lift||0;const below=o.below;
+  const top=below?y+25+lift:y-25-h-lift;
+  const tri=below?`M${x-6} ${top+1}L${x} ${top-7}L${x+6} ${top+1}z`:`M${x-6} ${top+h-1}L${x} ${top+h+7}L${x+6} ${top+h-1}z`;
+  return `<g ${att(o)}><path d="${tri}" style="fill:${V(k)}"/><rect x="${x-w/2}" y="${top}" width="${w}" height="${h}" rx="13" style="fill:${V(k)}"/><text x="${x}" y="${top+h/2+1}" class="pt" text-anchor="middle" dominant-baseline="central">${text}</text></g>`;}
+// text
+function T(x,y,s,o={}){const st=[];if(o.col)st.push(`fill:${V(o.col)}`);if(o.fs)st.push(`font-size:${o.fs}px`);
+  return `<text ${att({...o,cls:(o.c||'an')+(o.halo?' halo':'')})} x="${x}" y="${y}" text-anchor="${o.a||'start'}"${st.length?` style="${st.join(';')}"`:''}>${s}</text>`;}
+// numbered badge
+function B(x,y,n,k,o={}){return `<g ${att(o)}><circle cx="${x}" cy="${y}" r="15" style="fill:${V(k)}"/><text x="${x}" y="${y+1}" class="ct" text-anchor="middle" dominant-baseline="central" style="fill:var(--on);font-size:15px">${n}</text></g>`;}
+function R(x,y,w,h,o={}){return `<rect ${att(o)} x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.rx||16}" style="fill:${o.fill||'var(--card)'};stroke:${o.k?V(o.k):'var(--line)'};stroke-width:${o.sw||2}${o.dash?';stroke-dasharray:'+o.dash:''}"/>`;}
+const chain=(xs,y,k,o={})=>xs.slice(1).map((x,i)=>E(xs[i],y,x,y,k,o)).join('');
+
+const D={};
+D.title=()=>{let s='';
+  s+=T(24,75,'main',{c:'lane',col:'main'})+T(24,155,'develop',{c:'lane',col:'dev'})+T(24,235,'feature',{c:'lane',col:'feat'});
+  s+=E(180,70,1250,70,'main')+E(230,150,1250,150,'dev')+E(180,70,230,150,'dev');
+  s+=E(330,150,400,230,'feat')+E(400,230,470,230,'feat')+E(470,230,540,150,'feat');
+  s+=E(680,150,760,230,'feat')+chain([760,840,920],230,'feat')+E(920,230,1000,150,'feat');
+  s+=E(540,150,620,70,'dev')+E(1000,150,1080,70,'dev');
+  [180,620,1080].forEach((x,i)=>s+=C(x,70,'main',{merge:i>0,r:15}));
+  [230,330,540,680,1000,1180].forEach(x=>s+=C(x,150,'dev',{r:14,merge:x===540||x===1000}));
+  [400,470,760,840,920].forEach(x=>s+=C(x,230,'feat',{r:13}));
+  s+=P(620,70,'v1.0','main')+P(1080,70,'v1.1','main');
+  return s;};
+
+D.places=()=>{let s='';
+  const bx=[[30,'Working directory',['The files you see and edit','on your disk']],[330,'Staging area',['The index: changes queued','for your next commit']],[630,'Local repository',['Your full history in .git/','commits and branches']],[930,'Remote repository',['The shared copy, "origin"','GitHub, GitLab, a server']]];
+  bx.forEach(([x,t,l],i)=>{const rem=i===3;
+    s+=R(x,110,250,190,{k:rem?'remote':null,dash:rem?'9 7':null,sw:rem?2.5:2});
+    s+=T(x+24,152,t,{c:'bt',col:rem?'remote':null});
+    s+=T(x+24,180,l[0],{c:'bs'})+T(x+24,200,l[1],{c:'bs'});
+    const iy=250;
+    if(i<2){[0,1,2].forEach(j=>{const px=x+24+j*40;s+=`<rect x="${px}" y="${iy-18}" width="28" height="36" rx="4" style="fill:var(--bg);stroke:var(--muted);stroke-width:2"/><path d="M${px+6} ${iy-6}h16M${px+6} ${iy+1}h16M${px+6} ${iy+8}h10" style="stroke:var(--muted);stroke-width:2"/>`;});
+      if(i===1)s+=`<path d="M${x+18} ${iy+26}h128" style="stroke:var(--dev);stroke-width:3;stroke-linecap:round"/>`+T(x+156,iy+31,'staged',{c:'hash',col:'dev'});}
+    else{const k=rem?'remote':'main';const xs=[x+36,x+86,x+136,x+186];s+=chain(xs,iy,k,{w:4})+xs.map(xx=>C(xx,iy,k,{r:10})).join('');}
+  });
+  s+=T(450,24,'your computer',{c:'hash',a:'middle'})+`<path d="M40 34H860" style="stroke:var(--line);stroke-width:2"/>`;
+  s+=T(1055,24,'the server',{c:'hash',a:'middle',col:'remote'})+`<path d="M940 34H1170" style="stroke:var(--remote);stroke-width:2;opacity:.5"/>`;
+  const top=[['git add','dev'],['git commit','main'],['git push','feat']];
+  top.forEach(([t,k],i)=>{const cx=155+i*300;s+=`<g class="s" data-step="1">`+A(`M${cx+30} 106C${cx+80} 52 ${cx+220} 52 ${cx+270} 106`,k,{w:3.5})+T(cx+150,62,t,{c:'cd halo',a:'middle',col:k})+`</g>`;});
+  s+=`<g class="s" data-step="2">`+A('M1040 305C1000 368 810 368 770 305','remote',{w:3.5})+T(905,384,'git fetch',{c:'cd halo',a:'middle',col:'remote'})+`</g>`;
+  s+=`<g class="s" data-step="3">`+A('M735 305C690 418 220 418 175 305','dev',{w:3.5})+T(455,380,'git merge / git switch',{c:'cd halo',a:'middle',col:'dev'})+`</g>`;
+  s+=`<g class="s" data-step="4">`+A('M1070 305C1015 500 195 500 145 308','main',{w:6})+T(605,478,'git pull = fetch + merge',{c:'cd halo',a:'middle',col:'main',fs:18})+`</g>`;
+  return s;};
+
+D.graph=()=>{let s='';
+  s+=chain([80,200,320,440],260,'main')+E(200,260,340,140,'feat',{step:1})+E(340,140,460,140,'feat',{step:1})+E(460,140,580,140,'feat',{step:3});
+  [['a1f3',80],['9c2e',200],['e77b',320],['04d9',440]].forEach(([h,x])=>s+=C(x,260,'main',{label:h}));
+  s+=C(340,140,'feat',{label:'b5c1',step:1})+C(460,140,'feat',{label:'3fa8',step:1})+C(580,140,'feat',{label:'71de',step:3});
+  s+=A('M190 336H96','muted',{w:2})+T(210,341,'each commit points back to its parent',{c:'an m'});
+  s+=P(440,260,'main','main',{step:2});
+  s+=P(460,140,'feature','feat',{step:2,move:[3,120]})+P(460,140,'HEAD','head',{step:2,lift:34,move:[3,120]});
+  s+=T(640,212,'new commit: the label moves with it',{c:'an b',col:'feat',step:3,a:'middle'});
+  return s;};
+
+D.lvr=()=>{let s='';
+  s+=R(20,20,760,180,{k:'remote',dash:'9 7',sw:2.5})+T(44,52,'origin',{c:'an b',col:'remote',fs:18})+T(110,52,'· the shared repository on GitHub',{c:'an m'});
+  s+=chain([90,190,290],125,'main')+chain([290,390,490],125,'remote');
+  ['A','B','C'].forEach((t,i)=>s+=C(90+i*100,125,'main',{t}));s+=C(390,125,'remote',{t:'D'})+C(490,125,'remote',{t:'E'});
+  s+=P(490,125,'main','main');
+  s+=R(20,230,760,190,{})+T(44,262,'your laptop',{c:'an b',fs:18})+T(150,262,'· local repository',{c:'an m'});
+  s+=chain([90,190,290],360,'main')+E(290,360,410,360,'feat');
+  ['A','B','C'].forEach((t,i)=>s+=C(90+i*100,360,'main',{t}));s+=C(410,360,'feat',{t:'X'});
+  s+=P(290,360,'origin/main','remote',{below:true})+P(410,360,'main','main')+P(410,360,'HEAD','head',{lift:34});
+  s+=`<g class="s" data-step="1">`+C(540,360,'remote',{t:'D',ghost:true})+C(620,360,'remote',{t:'E',ghost:true})+T(510,405,'D and E? Not downloaded yet.',{c:'an b',col:'remote'})+`</g>`;
+  return s;};
+
+D.fetch=()=>{let s='';
+  s+=R(470,20,310,120,{k:'remote',dash:'9 7',sw:2.5})+T(490,50,'origin',{c:'an b',col:'remote',fs:18});
+  s+=E(540,95,630,95,'main')+E(630,95,720,95,'remote')+C(540,95,'main',{t:'C'})+C(630,95,'remote',{t:'D'})+C(720,95,'remote',{t:'E'});
+  s+=T(24,186,'your laptop',{c:'an b',fs:18});
+  s+=chain([80,190,300],340,'main')+E(300,340,430,340,'feat');
+  ['A','B','C'].forEach((t,i)=>s+=C(80+i*110,340,'main',{t}));s+=C(430,340,'feat',{t:'X'});
+  s+=`<g class="s" data-step="1">`+E(300,340,430,210,'remote')+E(430,210,540,210,'remote')+C(430,210,'remote',{t:'D'})+C(540,210,'remote',{t:'E'})
+    +A('M640 146C630 170 600 184 572 196','remote',{w:3})+T(652,178,'git fetch',{c:'cd halo',col:'remote'})+`</g>`;
+  s+=P(300,340,'origin/main','remote',{below:true,move:[1,240,-130]});
+  s+=P(430,340,'main','main')+P(430,340,'HEAD','head',{lift:34});
+  s+=`<g class="s" data-step="2">`+R(24,410,230,40,{rx:20,k:'dev'})+T(139,436,'✓ your files: untouched',{c:'an b',col:'dev',a:'middle'})
+    +R(270,410,210,40,{rx:20,k:'dev'})+T(375,436,'✓ main: still at X',{c:'an b',col:'dev',a:'middle'})+`</g>`;
+  return s;};
+
+D.ff=()=>{let s='';
+  s+=chain([90,200,310],220,'main')+chain([310,420,530],220,'remote');
+  ['A','B','C'].forEach((t,i)=>s+=C(90+i*110,220,'main',{t}));s+=C(420,220,'remote',{t:'D'})+C(530,220,'remote',{t:'E'});
+  s+=P(530,220,'origin/main','remote',{below:true});
+  s+=A('M320 110C380 70 470 70 520 110','main',{step:1,dash:'7 7',w:3});
+  s+=P(310,220,'main','main',{move:[1,220]})+P(310,220,'HEAD','head',{lift:34,move:[1,220]});
+  s+=T(400,330,'main is behind, with nothing new of its own',{c:'an m',a:'middle',until:1,fs:18});
+  s+=T(400,330,'main slides forward. No new commit is created.',{c:'an b',col:'main',a:'middle',step:1,fs:18});
+  return s;};
+
+D.merge3=()=>{let s='';
+  s+=chain([70,170,270],310,'main')+chain([270,390,500],310,'feat')+E(270,310,390,180,'remote')+E(390,180,500,180,'remote');
+  ['A','B','C'].forEach((t,i)=>s+=C(70+i*100,310,'main',{t}));
+  s+=C(390,310,'feat',{t:'X'})+C(500,310,'feat',{t:'Y'})+C(390,180,'remote',{t:'D'})+C(500,180,'remote',{t:'E'});
+  s+=P(500,180,'origin/main','remote');
+  s+=`<g class="s" data-step="1">`+E(500,310,640,310,'main')+E(500,180,640,310,'remote')+C(640,310,'main',{t:'M',merge:true})+`</g>`;
+  s+=P(500,310,'main','main',{move:[1,140]})+P(500,310,'HEAD','head',{lift:34,move:[1,140]});
+  s+=`<g class="s" data-step="2">`+T(640,376,'M has two parents: Y and E',{c:'an b',a:'middle',fs:18})+T(640,400,'yours and theirs, joined',{c:'an m',a:'middle'})
+    +`<circle cx="270" cy="310" r="27" style="fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:5 5"/>`+T(270,372,'common ancestor',{c:'an m',a:'middle'})+`</g>`;
+  return s;};
+
+D.mvr1=()=>{let s='';
+  s+=E(50,190,140,190,'main')+E(140,190,240,90,'remote')+E(240,90,340,90,'remote')+E(140,190,240,190,'feat')+E(240,190,340,190,'feat')+E(340,190,450,190,'main')+E(340,90,450,190,'remote');
+  s+=C(50,190,'main',{t:'A'})+C(140,190,'main',{t:'B'})+C(240,90,'remote',{t:'C'})+C(340,90,'remote',{t:'D'})+C(240,190,'feat',{t:'X'})+C(340,190,'feat',{t:'Y'})+C(450,190,'main',{t:'M',merge:true});
+  s+=P(450,190,'main','main');
+  return s;};
+D.mvr2=()=>{let s='';
+  s+=E(130,150,210,225,'muted',{dash:'6 7',w:3})+E(210,225,290,225,'muted',{dash:'6 7',w:3});
+  s+=C(210,225,'muted',{t:'X',ghost:true,r:15})+C(290,225,'muted',{t:'Y',ghost:true,r:15})+T(320,230,'old X, Y: discarded',{c:'an m'});
+  s+=chain([50,130],150,'main')+chain([130,210,290],150,'remote')+chain([290,380,470],150,'feat');
+  s+=C(50,150,'main',{t:'A'})+C(130,150,'main',{t:'B'})+C(210,150,'remote',{t:'C'})+C(290,150,'remote',{t:'D'})+C(380,150,'feat',{t:'X′'})+C(470,150,'feat',{t:'Y′'});
+  s+=P(470,150,'main','main');
+  s+=A('M270 205C300 188 340 182 368 172','muted',{w:2});
+  return s;};
+
+D.life=()=>{let s='';
+  s+=chain([80,200,520,820,960,1100],280,'main');
+  s+=E(200,280,330,150,'feat')+chain([330,450,570],150,'feat')+E(570,150,820,280,'feat');
+  [80,200,520,960].forEach(x=>s+=C(x,280,'main'));s+=C(820,280,'main',{merge:true});s+=C(1100,280,'main');
+  [330,450,570].forEach(x=>s+=C(x,150,'feat'));
+  s+=P(1100,280,'main','main');
+  s+=P(570,150,'feature/login','feat',{until:5});
+  s+=T(520,330,'teammates keep merging',{c:'an m',a:'middle'});
+  s+=`<g class="s" data-step="1">`+B(200,356,1,'feat')+T(224,362,'git switch -c feature/login',{c:'cd'})+`</g>`;
+  s+=`<g class="s" data-step="2">`+B(330,212,2,'feat')+T(354,218,'commit, commit, commit',{c:'cd'})+`</g>`;
+  s+=`<g class="s" data-step="3">`+R(296,112,310,76,{fill:'none',k:'remote',dash:'8 6',rx:40})+B(310,70,3,'remote')+T(334,76,'git push -u origin feature/login  →  open a Pull Request (review + CI)',{c:'cd'})+`</g>`;
+  s+=`<g class="s" data-step="4">`+B(820,340,4,'main')+T(844,346,'merge the PR into main',{c:'cd'})+`</g>`;
+  s+=`<g class="s" data-step="5">`+B(930,150,5,'hot')+T(954,156,'delete the branch',{c:'an b'})+T(954,180,'git branch -d feature/login',{c:'cd'})+`</g>`;
+  return s;};
+
+D.ghflow=()=>{let s='';
+  s+=E(40,260,1170,260,'main');
+  s+=E(80,260,150,150,'feat')+E(150,150,220,150,'feat')+E(220,150,300,260,'feat');
+  s+=E(300,260,380,150,'hot')+E(380,150,460,260,'hot');
+  s+=E(300,260,420,60,'feat')+chain([420,540,660,780],60,'feat')+E(780,60,880,260,'feat');
+  s+=E(460,260,560,150,'feat')+E(560,150,640,150,'feat')+E(640,150,720,260,'feat');
+  [80,180,1020].forEach(x=>s+=C(x,260,'main'));[300,460,720,880].forEach(x=>s+=C(x,260,'main',{merge:true}));s+=C(1120,260,'main');
+  [150,220,560,640].forEach(x=>s+=C(x,150,'feat',{r:14}));s+=C(380,150,'hot',{r:14});[420,540,660,780].forEach(x=>s+=C(x,60,'feat',{r:14}));
+  s+=T(116,120,'feature/login',{c:'cd halo',col:'feat'})+T(340,120,'fix/typo',{c:'cd halo',col:'hot'})+T(450,26,'feature/search',{c:'cd halo',col:'feat'})+T(540,120,'feature/avatar',{c:'cd halo',col:'feat'});
+  [300,460,720,880].forEach(x=>s+=`<g class="s" data-step="1"><path d="M${x-7} 300L${x} 290L${x+7} 300z" style="fill:var(--dev)"/>`+T(x,322,'deploy',{c:'hash',a:'middle',col:'dev'})+`</g>`);
+  s+=P(1120,260,'main','main');
+  return s;};
+
+D.gitflow=()=>{let s='';
+  const L={main:70,hot:150,rel:230,dev:310,feat:390};const f2=450;
+  [['main','main',L.main],['hotfix/*','hot',L.hot],['release/*','rel',L.rel],['develop','dev',L.dev],['feature/*','feat',L.feat]].forEach(([n,k,y])=>{
+    s+=`<path d="M125 ${y}H1180" style="stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 6"/>`+T(20,y+5,n,{c:'lane',col:k});});
+  s+=E(150,L.main,1180,L.main,'main')+E(200,L.dev,1180,L.dev,'dev')+E(150,L.main,200,L.dev,'dev');
+  s+=C(150,L.main,'main')+P(150,L.main,'v1.0','main')+C(200,L.dev,'dev',{r:14})+C(460,L.dev,'dev',{r:14});
+  // step1 features
+  s+=`<g class="s" data-step="1">`+E(200,L.dev,260,L.feat,'feat')+E(260,L.feat,330,L.feat,'feat')+E(330,L.feat,400,L.dev,'feat')
+    +E(460,L.dev,560,f2,'feat')+chain([560,680,860,1000],f2,'feat')+E(1000,f2,1100,L.dev,'feat')
+    +C(260,L.feat,'feat',{r:13})+C(330,L.feat,'feat',{r:13})+[560,680,860,1000].map(x=>C(x,f2,'feat',{r:13})).join('')
+    +C(400,L.dev,'dev',{r:14,merge:true})+C(1100,L.dev,'dev',{r:14,merge:true})+`</g>`;
+  // step2 release
+  s+=`<g class="s" data-step="2">`+E(460,L.dev,540,L.rel,'rel')+E(540,L.rel,620,L.rel,'rel')+E(620,L.rel,700,L.main,'rel')+E(620,L.rel,780,L.dev,'rel')
+    +C(540,L.rel,'rel',{r:13})+C(620,L.rel,'rel',{r:13})+C(700,L.main,'main',{merge:true})+C(780,L.dev,'dev',{r:14,merge:true})+P(700,L.main,'v1.1','main')
+    +T(580,L.rel-26,'freeze + fix bugs',{c:'hash',a:'middle',col:'rel'})+`</g>`;
+  // step3 hotfix
+  s+=`<g class="s" data-step="3">`+E(700,L.main,800,L.hot,'hot')+E(800,L.hot,900,L.main,'hot')+E(800,L.hot,950,L.dev,'hot')
+    +C(800,L.hot,'hot',{r:13})+C(900,L.main,'main',{merge:true})+C(950,L.dev,'dev',{r:14,merge:true})+P(900,L.main,'v1.1.1','main')
+    +T(760,L.hot-22,'urgent prod fix',{c:'hash',a:'middle',col:'hot'})+`</g>`;
+  s+=T(1180,L.main+36,'production: only tagged releases',{c:'an m',a:'end'})+T(1180,L.dev-18,'integration: next release in progress',{c:'an m',a:'end'});
+  return s;};
+
+D.trunk=()=>{let s='';const y=200;const xs=[...Array(12)].map((_,i)=>80+i*95);
+  s+=E(40,y,1170,y,'main');
+  [1,3,4,6,8,10].forEach(i=>{const a=xs[i],b=xs[i+1],m=(a+b)/2;s+=E(a,y,m,115,'feat',{w:4})+E(m,115,b,y,'feat',{w:4})+C(m,115,'feat',{r:10});});
+  xs.forEach(x=>s+=C(x,y,'main',{r:14}));
+  [[5,'new-checkout: off','muted'],[9,'new-checkout: on','dev']].forEach(([i,t,k])=>{const x=xs[i];
+    s+=`<path d="M${x} ${y+18}V${y+66}" style="stroke:${V(k)};stroke-width:2.5"/><path d="M${x} ${y+30}L${x+26} ${y+38}L${x} ${y+46}z" style="fill:${V(k)}"/>`+T(x+32,y+44,t,{c:'hash',col:k});});
+  s+=T(xs[0],60,'each bump = a branch that lived a few hours',{c:'an b',col:'feat',fs:18});
+  s+=A(`M${xs[0]+360} 66C${xs[0]+390} 80 ${xs[1]+80} 96 ${xs[1]+58} 106`,'feat',{w:2});
+  s+=P(xs[11],y,'main','main',{below:true,lift:44});
+  return s;};
+
+D.mini1=()=>E(10,44,200,44,'main',{w:4})+E(40,44,80,16,'feat',{w:3})+E(80,16,120,16,'feat',{w:3})+E(120,16,150,44,'feat',{w:3})+[40,150,190].map(x=>C(x,44,'main',{r:7})).join('')+[80,120].map(x=>C(x,16,'feat',{r:6})).join('');
+D.mini2=()=>E(10,10,200,10,'main',{w:3})+E(10,32,200,32,'dev',{w:3})+E(40,32,70,54,'feat',{w:3})+E(70,54,120,54,'feat',{w:3})+E(120,54,145,32,'feat',{w:3})+E(160,32,190,10,'rel',{w:3})+[20,190].map(x=>C(x,10,'main',{r:6})).join('')+[40,145,160].map(x=>C(x,32,'dev',{r:6})).join('')+[70,120].map(x=>C(x,54,'feat',{r:5})).join('');
+D.mini3=()=>{let s=E(10,44,200,44,'main',{w:4});[[30,60],[90,120],[140,170]].forEach(([a,b])=>{const m=(a+b)/2;s+=E(a,44,m,20,'feat',{w:3})+E(m,20,b,44,'feat',{w:3})+C(m,20,'feat',{r:5});});[30,60,90,120,140,170,195].forEach(x=>s+=C(x,44,'main',{r:6}));return s;};
+
+document.querySelectorAll('svg[data-d]').forEach(el=>{const f=D[el.dataset.d];if(f)el.innerHTML=f();});
+
+// deck engine
+const stage=document.getElementById('stage');
+const slides=[...document.querySelectorAll('.slide')];
+const N=slides.length;let i=0,step=0;
+const maxStep=s=>{let m=0;s.querySelectorAll('[data-step],[data-until],[data-mstep]').forEach(e=>{m=Math.max(m,+(e.dataset.step||0),+(e.dataset.until||0),+(e.dataset.mstep||0))});return m;};
+const maxes=slides.map(maxStep);
+const $=id=>document.getElementById(id);
+function render(){
+  slides.forEach((s,j)=>s.classList.toggle('active',j===i));
+  const s=slides[i];
+  s.querySelectorAll('.s').forEach(e=>e.classList.toggle('on',step>=+e.dataset.step));
+  s.querySelectorAll('.u').forEach(e=>e.classList.toggle('off',step>=+e.dataset.until));
+  s.querySelectorAll('.mv').forEach(e=>{e.style.transform=step>=+e.dataset.mstep?`translate(${e.dataset.dx}px,${e.dataset.dy}px)`:'';});
+  $('count').textContent=`${i+1} / ${N}`;
+  $('prog').style.width=((i+(maxes[i]?step/(maxes[i]+1):0))/(N-1)*100)+'%';
+  $('sec').textContent=s.dataset.sec||'';
+  $('pips').innerHTML=maxes[i]?[...Array(maxes[i]+1)].map((_,k)=>`<i class="${k<=step?'on':''}"></i>`).join(''):'';
+  $('prev').disabled=i===0&&step===0;$('next').disabled=i===N-1&&step===maxes[i];
+  try{history.replaceState(null,'','#s'+(i+1));}catch(e){}
+}
+function next(){if(step<maxes[i])step++;else if(i<N-1){i++;step=0;}render();}
+function prev(){if(step>0)step--;else if(i>0){i--;step=maxes[i];}render();}
+function go(n){i=Math.max(0,Math.min(N-1,n));step=0;render();}
+$('next').onclick=e=>{e.stopPropagation();next();};
+$('prev').onclick=e=>{e.stopPropagation();prev();};
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(N-1);
+});
+stage.addEventListener('click',e=>{if(window.getSelection&&String(window.getSelection()).length)return;
+  const r=stage.getBoundingClientRect();(e.clientX-r.left)<r.width*0.3?prev():next();});
+let tx=null;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>50){dx<0?next():prev();}},{passive:true});
+function fit(){const W=innerWidth,H=innerHeight,bar=52;const k=Math.min((W-32)/1280,(H-bar-24)/720);stage.style.setProperty('--k',k);stage.style.top=((H-bar)/2+4)+'px';}
+addEventListener('resize',fit);fit();
+const m=/^#s(\d+)$/.exec(location.hash||'');if(m)i=Math.max(0,Math.min(N-1,+m[1]-1));
+render();
+})();
+</script>
+
+</body></html>
